@@ -1,0 +1,20 @@
+{
+  "name": "vention-feature-api-test-automation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.7"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --config=api.config.ts --project=Chromium",
+    "report": "playwright show-report assets\reports",
+    "debug": "playwright test --debug"
+  }
+}
