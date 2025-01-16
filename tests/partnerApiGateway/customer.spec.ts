@@ -67,7 +67,6 @@ test.describe("Customer endpoints", () => {
                 },
             });
             const responseBody = JSON.parse(await response.text());
-            console.log(responseBody);
             expect(response.status()).toBe(200);
             expect(responseBody.meta.offset).toBe(0);
             expect(responseBody.data.length).toBeTruthy();
