@@ -1,14 +1,14 @@
 import {expect} from "@playwright/test";
 
 export const BASE_URL = "https://qa-partnerapigateway.drivecentric-sdlc.com/api";
-export const STORE_REFERENCE_1A = "120bb4ae-25ea-5de8-8e22-3c106501b21b";
-export const CUSTOMER_ID = "cd5ee319-4635-42ca-a236-94342ef873bd";
-export const CUSTOMER = {
+export const STORE_REFERENCE_1A = "2df7d8fb-8c92-4eef-aa80-3bd904c1dd97";
+export const CUSTOMER_ID = "bf6cadab-8180-4000-a0dc-dd9f0de99209";
+export const VALID_CUSTOMER = {
     "customer": {
         "customerType": "Individual",
-        "firstName": "Clark",
-        "middleName": "automation_test",
-        "lastName": "Nolan",
+        "firstName": "Kirill",
+        "middleName": "test",
+        "lastName": "Automation",
         "companyName": "Company automation",
         "currentAddress": {
             "line1": "line 1 automation",
@@ -44,13 +44,31 @@ export const CUSTOMER = {
 
 export const VALID_VEHICLE =
     {
-        "vin": "1HGCP3F89BA01898",
+        "vin": "1HGCP3F89VA018912",
         "year": 2011,
         "make": "Honda",
         "model": "Accord",
         "stockNumber": "J8552A",
         "mileage": 2000
     }
+
+export const VEHICLES_LIST = {
+    "fordFusion": {
+        "vin": "1HGCP3F89VA018912",
+        "year": 2010,
+        "make": "Ford",
+        "model": "Fusion"
+    },
+    "hondaAccord": {
+        "vin": "1HGCP3F89VA018912",
+        "year": 2011,
+        "make": "Honda",
+        "model": "Accord",
+        "stockNumber": "J8552A",
+        "mileage": 2000
+    }
+}
+
 
 export const INVALID_VEHICLE_VIN_LIST =
     {

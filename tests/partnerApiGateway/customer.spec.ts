@@ -1,16 +1,18 @@
 import {expect, test} from "@playwright/test";
-import {BASE_URL, CUSTOMER, CUSTOMER_ID, STORE_REFERENCE_1A} from "../../src/support/constants";
+import {BASE_URL, CUSTOMER_ID, STORE_REFERENCE_1A, VALID_CUSTOMER} from "../../src/support/constants";
+import ENV from "../../src/utils/env"
+import {Helpers} from "../../src/support/helpers";
 
 let authToken = "";
 
 test.beforeAll(async ({request}) => {
-    const response = await request.post(`${BASE_URL}/authentication/token`, {
+    const response = await request.post(`${ENV.PARTNER_API_GATEWAY_URL}/authentication/token`, {
         data: {
-            "clientId": "botdoc@test.com",
-            "clientSecret": "Botdoc123!@#",
+            "clientId": ENV.CLIENT_ID,
+            "clientSecret": ENV.CLIENT_SECRET,
         },
     });
-    authToken = JSON.parse(await response.text()).idToken;
+    authToken = Helpers.auth()
 });
 
 test.describe("Update customer", () => {
@@ -19,7 +21,7 @@ test.describe("Update customer", () => {
         const response = await request.post(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`,
-            }, data: CUSTOMER,
+            }, data: VALID_CUSTOMER,
         });
         expect(response.status()).toBe(200);
     });
@@ -29,20 +31,20 @@ test.describe("Update customer", () => {
             headers: {
                 "Authorization": `Bearer ${authToken}`,
             }, data: {
-                "emails": CUSTOMER.customer.emails,
-                "phones": CUSTOMER.customer.phones,
+                "emails": VALID_CUSTOMER.customer.emails,
+                "phones": VALID_CUSTOMER.customer.phones,
             },
         });
         const responseBody = JSON.parse(await response.text());
-        expect(responseBody.customer.emails.length).toBe(CUSTOMER.customer.emails.length);
-        expect(responseBody.customer.phones.length).toBe(CUSTOMER.customer.phones.length);
+        expect(responseBody.customer.emails.length).toBe(VALID_CUSTOMER.customer.emails.length);
+        expect(responseBody.customer.phones.length).toBe(VALID_CUSTOMER.customer.phones.length);
         expect(response.status()).toBe(200);
     });
 });
 
 test.describe("Get customer", () => {
 
-    test("I can get customer by id", async ({request}) => {
+    test.only("I can get customer by id", async ({request}) => {
         const response = await request.get(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`,
@@ -50,7 +52,7 @@ test.describe("Get customer", () => {
         });
         const responseBody = JSON.parse(await response.text());
         expect(response.status()).toBe(200);
-        expect(responseBody.customerInfo.firstName).toBe("Clark");
+        expect(responseBody.customerInfo.firstName).toEqual(VALID_CUSTOMER.customer.firstName);
     });
 
     test("I can get/fetch customer list", async ({request}) => {

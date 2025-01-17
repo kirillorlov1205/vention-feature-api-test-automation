@@ -1,12 +1,14 @@
 import {expect, test} from "@playwright/test";
 import {
     BASE_URL,
-    CUSTOMER_ID, EMPTY_VIN_VALIDATION_MESSAGE,
+    CUSTOMER_ID,
+    EMPTY_VIN_VALIDATION_MESSAGE,
     INVALID_VEHICLE_VIN_LIST,
     LESS_THAN_LIMIT_VIN_VALIDATION_MESSAGE,
     MORE_THAN_LIMIT_VIN_VALIDATION_MESSAGE,
     STORE_REFERENCE_1A,
-    VALID_VEHICLE
+    VALID_VEHICLE,
+    VEHICLES_LIST
 } from "../../src/support/constants";
 
 let authToken = "";
@@ -14,8 +16,8 @@ let authToken = "";
 test.beforeAll(async ({request}) => {
     const response = await request.post(`${BASE_URL}/authentication/token`, {
         data: {
-            "clientId": "botdoc@test.com",
-            "clientSecret": "Botdoc123!@#",
+            "clientId": process.env.CLIENT_ID,
+            "clientSecret": process.env.CLIENT_SECRET,
         },
     });
     authToken = JSON.parse(await response.text()).idToken;
@@ -39,7 +41,7 @@ test.describe("Create vehicle in customer garage", () => {
             headers: {
                 "Authorization": `Bearer ${authToken}`,
             }, data: {
-                "vin": INVALID_VEHICLE_VIN_LIST["More than 17 characters"],
+                "vin": INVALID_VEHICLE_VIN_LIST["More than limit characters"],
                 "year": 2011,
                 "make": "Honda",
                 "model": "Accord",
@@ -86,17 +88,31 @@ test.describe("Create vehicle in customer garage", () => {
     });
 });
 
-test.describe("Get vehicle from customer garage", () => {
+test.describe("Get vehicles from customer garage", () => {
 
-    test("I can get vehicle from customer garage", async ({request}) => {
+    test("I can get vehicles from customer garage", async ({request}) => {
         const response = await request.get(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/garage`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`,
             }
         });
         const responseBody = JSON.parse(await response.text());
-        console.log(responseBody)
-        // expect(responseBody.vin).toBe(VEHICLE.vin);
+        expect(responseBody.garageVehicles[0].vin).toEqual(VALID_VEHICLE.vin);
+        expect(response.status()).toBe(200);
+    });
+});
+
+test.describe("Update vehicle in customer garage", () => {
+
+    test("I can update vehicle in customer garage", async ({request}) => {
+        const response = await request.put(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/${VALID_VEHICLE.vin}/garage`, {
+            headers: {
+                "Authorization": `Bearer ${authToken}`,
+            },
+            data: VEHICLES_LIST.fordFusion
+        });
+        const responseBody = JSON.parse(await response.text());
+        expect(responseBody).toEqual(VEHICLES_LIST.fordFusion);
         expect(response.status()).toBe(200);
     });
 });
@@ -110,8 +126,7 @@ test.describe("Remove vehicle from customer garage", () => {
             }
         });
         const responseBody = JSON.parse(await response.text());
-        expect(responseBody.deletedCount).toBeTruthy();
         expect(response.status()).toBe(200);
+        expect(responseBody.deletedCount).toBeTruthy();
     });
-
 });
