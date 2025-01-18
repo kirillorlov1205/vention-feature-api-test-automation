@@ -1,18 +1,11 @@
 import {expect, test} from "@playwright/test";
 import {BASE_URL, CUSTOMER_ID, STORE_REFERENCE_1A, VALID_CUSTOMER} from "../../src/support/constants";
-import ENV from "../../src/utils/env"
 import {Helpers} from "../../src/support/helpers";
 
-let authToken = "";
+let authToken;
 
 test.beforeAll(async ({request}) => {
-    const response = await request.post(`${ENV.PARTNER_API_GATEWAY_URL}/authentication/token`, {
-        data: {
-            "clientId": ENV.CLIENT_ID,
-            "clientSecret": ENV.CLIENT_SECRET,
-        },
-    });
-    authToken = Helpers.auth()
+    authToken = await Helpers.auth({request});
 });
 
 test.describe("Update customer", () => {
@@ -44,7 +37,7 @@ test.describe("Update customer", () => {
 
 test.describe("Get customer", () => {
 
-    test.only("I can get customer by id", async ({request}) => {
+    test("I can get customer by id", async ({request}) => {
         const response = await request.get(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`,

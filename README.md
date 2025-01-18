@@ -1,3 +1,2 @@
-TBD:
-1. AUTH hepler
-2. dotenv env https://www.youtube.com/watch?v=GQStVI5qbLI
+**TBD:**
+1. Move Helper functions to specific Page Object

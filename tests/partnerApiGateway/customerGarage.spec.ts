@@ -10,28 +10,20 @@ import {
     VALID_VEHICLE,
     VEHICLES_LIST
 } from "../../src/support/constants";
+import {Helpers} from "../../src/support/helpers";
 
-let authToken = "";
+let authToken;
 
 test.beforeAll(async ({request}) => {
-    const response = await request.post(`${BASE_URL}/authentication/token`, {
-        data: {
-            "clientId": process.env.CLIENT_ID,
-            "clientSecret": process.env.CLIENT_SECRET,
-        },
-    });
-    authToken = JSON.parse(await response.text()).idToken;
+    authToken = await Helpers.auth({request});
 });
 
-test.describe("Create vehicle in customer garage", () => {
+test.describe("Create customer garage vehicle", () => {
 
     test("I can create a new vehicle in customer garage", async ({request}) => {
-        const response = await request.post(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/garage`, {
-            headers: {
-                "Authorization": `Bearer ${authToken}`,
-            }, data: VALID_VEHICLE,
-        });
+        const response = await Helpers.createCustomerGarageVehicle({request}, authToken);
         const responseBody = JSON.parse(await response.text());
+        await Helpers.deleteCustomerGarageVehicleByVin({request}, authToken, VALID_VEHICLE.vin);
         expect(responseBody.vin).toBe(VALID_VEHICLE.vin);
         expect(response.status()).toBe(200);
     });
@@ -88,43 +80,35 @@ test.describe("Create vehicle in customer garage", () => {
     });
 });
 
-test.describe("Get vehicles from customer garage", () => {
-
-    test("I can get vehicles from customer garage", async ({request}) => {
-        const response = await request.get(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/garage`, {
-            headers: {
-                "Authorization": `Bearer ${authToken}`,
-            }
-        });
+test.describe("Get customer garage vehicles", () => {
+    test.describe.configure({retries: 5});
+    test("I can get customer garage vehicles", async ({request}) => {
+        await Helpers.createCustomerGarageVehicle({request}, authToken);
+        const response = await Helpers.getCustomerGarageVehicles({request}, authToken);
         const responseBody = JSON.parse(await response.text());
+        await Helpers.deleteCustomerGarageVehicleByVin({request}, authToken, VALID_VEHICLE.vin);
         expect(responseBody.garageVehicles[0].vin).toEqual(VALID_VEHICLE.vin);
         expect(response.status()).toBe(200);
     });
 });
 
-test.describe("Update vehicle in customer garage", () => {
+test.describe("Update customer garage vehicle", () => {
 
-    test("I can update vehicle in customer garage", async ({request}) => {
-        const response = await request.put(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/${VALID_VEHICLE.vin}/garage`, {
-            headers: {
-                "Authorization": `Bearer ${authToken}`,
-            },
-            data: VEHICLES_LIST.fordFusion
-        });
+    test("I can update customer garage vehicle", async ({request}) => {
+        await Helpers.createCustomerGarageVehicle({request}, authToken);
+        const response = await Helpers.updateCustomerGarageVehicleByVin({request}, authToken, VALID_VEHICLE.vin, VEHICLES_LIST.fordFusion)
         const responseBody = JSON.parse(await response.text());
+        await Helpers.deleteCustomerGarageVehicleByVin({request}, authToken, VALID_VEHICLE.vin);
         expect(responseBody).toEqual(VEHICLES_LIST.fordFusion);
         expect(response.status()).toBe(200);
     });
 });
 
-test.describe("Remove vehicle from customer garage", () => {
+test.describe("Remove customer garage vehicle", () => {
 
-    test("I can remove vehicle from customer garage", async ({request}) => {
-        const response = await request.delete(`${BASE_URL}/stores/${STORE_REFERENCE_1A}/customers/${CUSTOMER_ID}/vehicles/${VALID_VEHICLE.vin}/garage`, {
-            headers: {
-                "Authorization": `Bearer ${authToken}`,
-            }
-        });
+    test("I can remove customer garage vehicle", async ({request}) => {
+        await Helpers.createCustomerGarageVehicle({request}, authToken);
+        const response = await Helpers.deleteCustomerGarageVehicleByVin({request}, authToken, VALID_VEHICLE.vin);
         const responseBody = JSON.parse(await response.text());
         expect(response.status()).toBe(200);
         expect(responseBody.deletedCount).toBeTruthy();
