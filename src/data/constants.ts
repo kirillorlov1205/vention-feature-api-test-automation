@@ -1,5 +1,3 @@
-import {expect} from "@playwright/test";
-
 export const BASE_URL = "https://qa-partnerapigateway.drivecentric-sdlc.com/api";
 export const STORE_REFERENCE_1A = "2df7d8fb-8c92-4eef-aa80-3bd904c1dd97";
 export const CUSTOMER_ID = "bf6cadab-8180-4000-a0dc-dd9f0de99209";
@@ -76,30 +74,3 @@ export const INVALID_VEHICLE_VIN_LIST =
         "Less than limit characters": "12",
         "Empty VIN": "",
     }
-
-export const MORE_THAN_LIMIT_VIN_VALIDATION_MESSAGE = {
-    "code": 400,
-    "message": "Validation failed for these properties: 'GarageVehicleModel.Vin'",
-    "details": "The length of 'Vin' must be 17 characters or fewer. You entered 18 characters.",
-    "hint": "Check the API documentation at https://partners.drivecentric.io/reference to ensure your request structure adheres to the required format.",
-    "correlationId": expect.any(String),
-    "traceId": null
-}
-
-export const LESS_THAN_LIMIT_VIN_VALIDATION_MESSAGE = {
-    "code": 400,
-    "message": "Validation failed for these properties: 'GarageVehicleModel.Vin'",
-    "details": "The length of 'Vin' must be at least 3 characters. You entered 2 characters.",
-    "hint": "Check the API documentation at https://partners.drivecentric.io/reference to ensure your request structure adheres to the required format.",
-    "correlationId": expect.any(String),
-    "traceId": null
-}
-
-export const EMPTY_VIN_VALIDATION_MESSAGE = {
-    "code": 400,
-    "message": "Validation failed for these properties: 'GarageVehicleModel.Vin'",
-    "details": "'Vin' must not be empty. The length of 'Vin' must be at least 3 characters. You entered 0 characters.",
-    "hint": "Check the API documentation at https://partners.drivecentric.io/reference to ensure your request structure adheres to the required format.",
-    "correlationId": expect.any(String),
-    "traceId": null
-}
