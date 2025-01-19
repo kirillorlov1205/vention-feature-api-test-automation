@@ -21,7 +21,7 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
 
-  globalSetup: "src/utils/globalSetup.ts",
+  globalSetup: "src/config/globalSetup.ts",
 
   // dotenv.config({
   //   path: `./env/.env.qa`

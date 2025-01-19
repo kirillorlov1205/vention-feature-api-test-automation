@@ -1,11 +1,11 @@
 import {expect, test} from "@playwright/test";
-import {BASE_URL, CUSTOMER_ID, STORE_REFERENCE_1A, VALID_CUSTOMER} from "../../src/support/constants";
-import {Helpers} from "../../src/support/helpers";
+import {BASE_URL, CUSTOMER_ID, STORE_REFERENCE_1A, VALID_CUSTOMER} from "../../src/data/constants";
+import {auth} from "../../src/helpers/common";
 
 let authToken;
 
 test.beforeAll(async ({request}) => {
-    authToken = await Helpers.auth({request});
+    authToken = await auth({request});
 });
 
 test.describe("Update customer", () => {
