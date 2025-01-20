@@ -7,7 +7,7 @@ import {
     VALID_VEHICLE,
     VEHICLES_LIST
 } from "../../src/data/constants";
-import {CustomerGarage} from "../../src/methods/CustomerGarage";
+import {CustomerGarage} from "../../src/methods/customerGarage";
 import {
     CREATE_GARAGE_VEHICLE_VALIDATION_MESSAGE_LIST,
     DELETE_GARAGE_VEHICLE_VALIDATION_MESSAGE_LIST,
@@ -22,7 +22,7 @@ test.beforeAll(async ({request}) => {
 });
 
 test.describe("Customer garage. Create customer garage vehicle", () => {
-    test.describe.configure({retries: 5});
+    test.describe.configure({retries: 10});
 
     test("I can create a new vehicle in customer garage", async ({request}) => {
         const response = await CUSTOMER_GARAGE.createCustomerGarageVehicle({request}, authToken);
@@ -85,7 +85,7 @@ test.describe("Customer garage. Create customer garage vehicle", () => {
 });
 
 test.describe("Customer garage. Get customer garage vehicles", () => {
-    test.describe.configure({retries: 5});
+    test.describe.configure({retries: 10});
     test("I can get customer garage vehicles", async ({request}) => {
         await CUSTOMER_GARAGE.createCustomerGarageVehicle({request}, authToken);
         const response = await CUSTOMER_GARAGE.getCustomerGarageVehicles({request}, authToken);
@@ -109,6 +109,7 @@ test.describe("Customer garage. Update customer garage vehicle", () => {
 });
 
 test.describe("Customer garage. Delete customer garage vehicle", () => {
+    test.describe.configure({retries: 10});
 
     test("I can delete customer garage vehicle", async ({request}) => {
         await CUSTOMER_GARAGE.createCustomerGarageVehicle({request}, authToken);

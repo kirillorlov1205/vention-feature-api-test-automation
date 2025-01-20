@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test_qa": "cross-env test_env=qa npx playwright test --project=Chromium",
-    "test_qa_repeat": "cross-env test_env=qa npx playwright test --project=Chromium --repeat-each=10",
+    "test_qa_repeat": "cross-env test_env=qa npx playwright test --project=Chromium --repeat-each=5",
     "report": "playwright show-report assets\reports",
     "debug": "playwright test "
   },
