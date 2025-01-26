@@ -8,7 +8,7 @@ test.beforeAll(async ({request}) => {
     authToken = await auth({request});
 });
 
-const subscribeTestData = [
+const SUBSCRIBE_TEST_DATA = [
     {
         name: "all subscription settings true",
         communications: {
@@ -51,7 +51,7 @@ const subscribeTestData = [
     }
 ];
 
-const unsubscribeTestData = [
+const UNSUBSCRIBE_TEST_DATA = [
     {
         name: "all subscription settings true",
         communications: {
@@ -108,9 +108,9 @@ const unsubscribeTestData = [
     }
 ];
 
-test.describe("Customer communication subscription", () => {
+test.describe("Communication subscription. Subscribe customer to communication", () => {
 
-    subscribeTestData.forEach((SubscriptionSettings) => {
+    SUBSCRIBE_TEST_DATA.forEach((SubscriptionSettings) => {
         test(`I can subscribe to customer communication with '${SubscriptionSettings.name}'`, async ({request}) => {
             const response = await subscribeToCommunication({request}, authToken, SubscriptionSettings.communications)
             const responseBody = JSON.parse(await response.text());
@@ -118,8 +118,10 @@ test.describe("Customer communication subscription", () => {
             expect(responseBody.communications).toEqual(SubscriptionSettings.communications);
         })
     })
+})
 
-    unsubscribeTestData.forEach((SubscriptionSettings) => {
+test.describe("Communication subscription. Unsubscribe customer to communication", () => {
+    UNSUBSCRIBE_TEST_DATA.forEach((SubscriptionSettings) => {
         test(`I can unsubscribe from customer communication with '${SubscriptionSettings.name}'`, async ({request}) => {
             const response = await unsubscribeToCommunication({request}, authToken, SubscriptionSettings.communications)
             const responseBody = JSON.parse(await response.text());
@@ -128,4 +130,3 @@ test.describe("Customer communication subscription", () => {
         })
     })
 })
-
